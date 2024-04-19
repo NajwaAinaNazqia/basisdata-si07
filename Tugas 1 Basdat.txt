@@ -1,0 +1,606 @@
+Setting environment for using XAMPP for Windows.
+Najwa Aina Nazqia@DESKTOP-TOIB4QR c:\xampp
+# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 11
+Server version: 10.4.28-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+--> Jawaban No. 1 Membuat Database dbpegawai
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.001 sec)
+
+--> Jawaban No. 2 Masuk ke dbpegawai
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+
+--> Jawaban No. 3 Membuat tabel divisi
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.024 sec)
+
+--> Jawaban No. 4 Menampilkan tabel divisi
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.017 sec)
+
+--> Jawaban No. 5 Membuat tabel jabatan
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.033 sec)
+
+--> Jawaban No. 6 Menampilkan tabel jabatan
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.016 sec)
+
+--> Jawaban No. 7 Membuat tabel pegawai
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id int primary key auto_increment,
+    -> nip char(5) not null unique,
+    -> nama varchar(30) not null,
+    -> gender enum('Laki-Laki','Perempuan') not null,
+    -> tmp_lahir varchar(30) not null,
+    -> tgl_lahir date not null,
+    -> iddivisi int not null,
+    -> idjabatan int not null,
+    -> alamat text,
+    -> FOREIGN KEY (iddivisi) REFERENCES divisi(id),
+    -> FOREIGN KEY (idjabatan) REFERENCES jabatan(id));
+Query OK, 0 rows affected (0.028 sec)
+
+--> Jawaban No. 8 Menampilkan tabel pegawai
+MariaDB [dbpegawai]> DESC pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('Laki-Laki','Perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   | MUL | NULL    |                |
+| idjabatan | int(11)                       | NO   | MUL | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.012 sec)
+
+--> Jawaban No. 9 Memnampilkan Tabel-Tabel dbpegawai
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.001 sec)
+
+--> Jawaban No. 10  Input data divisi => SDM, Keuangan, Marketing, IT 
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES ('SDM'), ('Keuangan'), ('Marketing'), ('IT');
+Query OK, 4 rows affected (0.002 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--> Jawaban No. 11 Menampilkan seluruh data divisi
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | Keuangan  |
+|  3 | Marketing |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.001 sec)
+
+--> jawaban No. 12 Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff 
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES ('Direktur'), ('Manajer'), ('Asisten Manajer'), ('Staff');
+Query OK, 4 rows affected (0.003 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+--> Jawaban No. 13 Menampilkan seluruh data jabatan 
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | Asisten Manajer |
+|  1 | Direktur        |
+|  2 | Manajer         |
+|  4 | Staff           |
++----+-----------------+
+4 rows in set (0.000 sec)
+
+--> Jawaban No. 14 Input 20 orang pegawai
+MariaDB [dbpegawai]> INSERT INTO pegawai (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES
+    -> ('01010','Najwa Aina Nazqia','Perempuan','Jakarta','2005-06-09',1,1,'JL Tole Iskandar'),
+    -> ('02020','Zayn','Laki-Laki','Depok','2004-05-05',1,2,'JL Cempaka'),
+    -> ('03030','Emilia','Perempuan','Bogor','2003-06-06',1,3,'JL Lily'),
+    -> ('04040','Vero','Laki-Laki','Tangerang','2002-07-07',1,4,'JL Dahlia'),
+    -> ('05050','Sasya','Perempuan','Bekasi','2001-01-01',1,1,'JL Merpati'),
+    -> ('06060','Hans','Laki-Laki','Semarang','2006-02-01',2,4,'JL Nuri'),
+    -> ('07070','Lily','Perempuan','Bandung','1980-02-02',2,3,'JL Anggrek'),
+    -> ('08080','Arsa','Laki-Laki','Jakarta','1982-06-02',2,2,'JL Siliwangi'),
+    -> ('09090','Mily','Perempuan','Jakarta','2009-09-09',2,1,'JL Nusantara'),
+    -> ('10101','Muhammad Ali','Laki-Laki','Demak','1990-09-09',2,4,'JL Bhayangkara'),
+    -> ('11111','Lilis','Perempuan','Bandung','1985-01-09',3,1,'JL Anggrek'),
+    -> ('12121','Aseprianto','Laki-Laki','Yogyakarta','2003-01-09',3,1,'JL Arjuna'),
+    -> ('13131','Lisya','Perempuan','Tangerang','2002-02-09',3,2,'JL Dahlia'),
+    -> ('14141','Wiliam Santoso','Laki-Laki','Sukabumi','2004-04-01',3,3,'JL Siliwangi'),
+    -> ('15151','Ziyi','Perempuan','Demak','1995-10-01',3,4,'JL Bhayangkara'),
+    -> ('16161','Arsa','Laki-Laki','Depok','2001-09-10',4,4,'JL Abadi'),
+    -> ('17171','Sena','Perempuan','Bandung','2010-07-10',4,3,'JL Tugu'),
+    -> ('18181','Liyam','Laki-Laki','Semarang','1975-04-10',4,2,'JL Nuri'),
+    -> ('19191','Azqia','Perempuan','Bekasi','2005-04-19',4,1,'JL Merpati'),
+    -> ('20202','Eza','Laki-Laki','Jakarta','2008-08-10',4,4,'JL Proklamasi');
+Query OK, 20 rows affected (0.008 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+--> Jawaban No. 15 Menampilkan seluruh data pegawai 
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+
+| id | nip   | nama              | gender    | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           |
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |
+|  2 | 02020 | Zayn              | Laki-Laki | Depok      | 2004-05-05 |        1 |         2 | JL Cempaka       |
+|  3 | 03030 | Emilia            | Perempuan | Bogor      | 2003-06-06 |        1 |         3 | JL Lily          |
+|  4 | 04040 | Vero              | Laki-Laki | Tangerang  | 2002-07-07 |        1 |         4 | JL Dahlia        |
+|  5 | 05050 | Sasya             | Perempuan | Bekasi     | 2001-01-01 |        1 |         1 | JL Merpati       |
+|  6 | 06060 | Hans              | Laki-Laki | Semarang   | 2006-02-01 |        2 |         4 | JL Nuri          |
+|  7 | 07070 | Lily              | Perempuan | Bandung    | 1980-02-02 |        2 |         3 | JL Anggrek       |
+|  8 | 08080 | Arsa              | Laki-Laki | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi     |
+|  9 | 09090 | Mily              | Perempuan | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara   |
+| 11 | 11111 | Lilis             | Perempuan | Bandung    | 1985-01-09 |        3 |         1 | JL Anggrek       |
+| 12 | 12121 | Aseprianto        | Laki-Laki | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna        |
+| 13 | 13131 | Lisya             | Perempuan | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |
+| 14 | 14141 | Wiliam Santoso    | Laki-Laki | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi     |
+| 15 | 15151 | Ziyi              | Perempuan | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |
+| 16 | 16161 | Arsa              | Laki-Laki | Depok      | 2001-09-10 |        4 |         4 | JL Abadi         |
+| 17 | 17171 | Sena              | Perempuan | Bandung    | 2010-07-10 |        4 |         3 | JL Tugu          |
+| 18 | 18181 | Liyam             | Laki-Laki | Semarang   | 1975-04-10 |        4 |         2 | JL Nuri          |
+| 19 | 19191 | Azqia             | Perempuan | Bekasi     | 2005-04-19 |        4 |         1 | JL Merpati       |
+| 20 | 20202 | Eza               | Laki-Laki | Jakarta    | 2008-08-10 |        4 |         4 | JL Proklamasi    |
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+
+20 rows in set (0.000 sec)
+
+--> Jawaban No. 16 Mengubah data 5 orang pegawai 
+MariaDB [dbpegawai]> UPDATE pegawai SET tmp_lahir='Bandung',tgl_lahir='2002-10-10',alamat='JL Akasia' WHERE id=2;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET tmp_lahir='Yogyakarta',tgl_lahir='2000-05-01',alamat='JL Aksara' WHERE id=3;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET tmp_lahir='Surabaya',tgl_lahir='2010-11-10',alamat='JL Raja' WHERE id=4;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET tmp_lahir='Malang',tgl_lahir='2011-11-11',alamat='JL Indah' WHERE id=5;
+Query OK, 1 row affected (0.002 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET tmp_lahir='Cirebon',tgl_lahir='2001-09-06',alamat='JL Rawa' WHERE id=6;
+Query OK, 1 row affected (0.001 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+--> Jawaban No. 17 Menghapus 2 orang pegawai terakhir
+MariaDB [dbpegawai]> DELETE FROM pegawai ORDER BY id DESC LIMIT 2;
+Query OK, 2 rows affected (0.004 sec)
+
+--> Jawaban No. 18 Menambahkan kolom baru berat_badan dan input data secara acak
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN IF NOT EXISTS berat_badan FLOAT NOT NULL AFTER alamat;
+Query OK, 0 rows affected (0.009 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan = FLOOR(RAND() * 40 + 30);
+Query OK, 18 rows affected (0.006 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+-------------+
+| id | nip   | nama              | gender    | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan |
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+-------------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |
+|  2 | 02020 | Zayn              | Laki-Laki | Bandung    | 2002-10-10 |        1 |         2 | JL Akasia        |          38 |
+|  3 | 03030 | Emilia            | Perempuan | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |
+|  4 | 04040 | Vero              | Laki-Laki | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja          |          47 |
+|  5 | 05050 | Sasya             | Perempuan | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |
+|  6 | 06060 | Hans              | Laki-Laki | Cirebon    | 2001-09-06 |        2 |         4 | JL Rawa          |          44 |
+|  7 | 07070 | Lily              | Perempuan | Bandung    | 1980-02-02 |        2 |         3 | JL Anggrek       |          30 |
+|  8 | 08080 | Arsa              | Laki-Laki | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi     |          67 |
+|  9 | 09090 | Mily              | Perempuan | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |          55 |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara   |          44 |
+| 11 | 11111 | Lilis             | Perempuan | Bandung    | 1985-01-09 |        3 |         1 | JL Anggrek       |          67 |
+| 12 | 12121 | Aseprianto        | Laki-Laki | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna        |          52 |
+| 13 | 13131 | Lisya             | Perempuan | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |          32 |
+| 14 | 14141 | Wiliam Santoso    | Laki-Laki | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi     |          53 |
+| 15 | 15151 | Ziyi              | Perempuan | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |          60 |
+| 16 | 16161 | Arsa              | Laki-Laki | Depok      | 2001-09-10 |        4 |         4 | JL Abadi         |          31 |
+| 17 | 17171 | Sena              | Perempuan | Bandung    | 2010-07-10 |        4 |         3 | JL Tugu          |          64 |
+| 18 | 18181 | Liyam             | Laki-Laki | Semarang   | 1975-04-10 |        4 |         2 | JL Nuri          |          40 |
++----+-------+-------------------+-----------+------------+------------+----------+-----------+------------------+-------------+
+18 rows in set (0.001 sec)
+
+--> Jawaban No. 19 Menambahkan kolom baru umur dan input semua umur secara acak
+MariaDB [dbpegawai]> ALTER TABLE pegawai
+    -> ADD COLUMN IF NOT EXISTS umur INT AFTER berat_badan;
+Query OK, 0 rows affected (0.008 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET umur = FLOOR(RAND() * 41) + 20;
+Query OK, 18 rows affected (0.008 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+--> Jawaban No. 20 Mengubah nama kolom gender menjadi jenis_kelamin
+MariaDB [dbpegawai]> ALTER TABLE pegawai CHANGE gender jenis_kelamin ENUM('Laki-Laki', 'Perempuan');
+Query OK, 0 rows affected (0.086 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--> Jawaban No. 21 Menampilkan kolom tertentu ditabel pegawai (nip,nama,jenis_kelamin,alamat)
+MariaDB [dbpegawai]> SELECT nip, nama, jenis_kelamin, alamat FROM pegawai;
++-------+-------------------+---------------+------------------+
+| nip   | nama              | jenis_kelamin | alamat           |
++-------+-------------------+---------------+------------------+
+| 01010 | Najwa Aina Nazqia | Perempuan     | JL Tole Iskandar |
+| 02020 | Zayn              | Laki-Laki     | JL Akasia        |
+| 03030 | Emilia            | Perempuan     | JL Aksara        |
+| 04040 | Vero              | Laki-Laki     | JL Raja          |
+| 05050 | Sasya             | Perempuan     | JL Indah         |
+| 06060 | Hans              | Laki-Laki     | JL Rawa          |
+| 07070 | Lily              | Perempuan     | JL Anggrek       |
+| 08080 | Arsa              | Laki-Laki     | JL Siliwangi     |
+| 09090 | Mily              | Perempuan     | JL Nusantara     |
+| 10101 | Muhammad Ali      | Laki-Laki     | JL Bhayangkara   |
+| 11111 | Lilis             | Perempuan     | JL Anggrek       |
+| 12121 | Aseprianto        | Laki-Laki     | JL Arjuna        |
+| 13131 | Lisya             | Perempuan     | JL Dahlia        |
+| 14141 | Wiliam Santoso    | Laki-Laki     | JL Siliwangi     |
+| 15151 | Ziyi              | Perempuan     | JL Bhayangkara   |
+| 16161 | Arsa              | Laki-Laki     | JL Abadi         |
+| 17171 | Sena              | Perempuan     | JL Tugu          |
+| 18181 | Liyam             | Laki-Laki     | JL Nuri          |
++-------+-------------------+---------------+------------------+
+18 rows in set (0.002 sec)
+
+--> Jawaban No. 22 Menampilkan Tabel pegawai (yang gendernya laki-laki saja)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin = 'Laki-Laki';
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+|  2 | 02020 | Zayn           | Laki-Laki     | Bandung    | 2002-10-10 |        1 |         2 | JL Akasia      |          38 |   42 |
+|  4 | 04040 | Vero           | Laki-Laki     | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja        |          47 |   32 |
+|  6 | 06060 | Hans           | Laki-Laki     | Cirebon    | 2001-09-06 |        2 |         4 | JL Rawa        |          44 |   58 |
+|  8 | 08080 | Arsa           | Laki-Laki     | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi   |          67 |   25 |
+| 10 | 10101 | Muhammad Ali   | Laki-Laki     | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara |          44 |   30 |
+| 12 | 12121 | Aseprianto     | Laki-Laki     | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna      |          52 |   36 |
+| 14 | 14141 | Wiliam Santoso | Laki-Laki     | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi   |          53 |   39 |
+| 16 | 16161 | Arsa           | Laki-Laki     | Depok      | 2001-09-10 |        4 |         4 | JL Abadi       |          31 |   33 |
+| 18 | 18181 | Liyam          | Laki-Laki     | Semarang   | 1975-04-10 |        4 |         2 | JL Nuri        |          40 |   24 |
++----+-------+----------------+---------------+------------+------------+----------+-----------+----------------+-------------+------+
+9 rows in set (0.002 sec)
+
+--> Jawaban No. 23 Menampilkan baris tertentu tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi = 4 AND jenis_kelamin = 'Perempuan';
++----+-------+------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| id | nip   | nama | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat  | berat_badan | umur |
++----+-------+------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+| 17 | 17171 | Sena | Perempuan     | Bandung   | 2010-07-10 |        4 |         3 | JL Tugu |          64 |   37 |
++----+-------+------+---------------+-----------+------------+----------+-----------+---------+-------------+------+
+1 row in set (0.003 sec)
+
+--> Jawaban No. 24 Menampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE umur > 30 AND tmp_lahir = 'Jakarta';
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta   | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 25 Menampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan
+berjenis kelamin perempuan
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi = 3 AND umur > 30 AND jenis_kelamin = 'Perempuan';
++----+-------+-------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| 11 | 11111 | Lilis | Perempuan     | Bandung   | 1985-01-09 |        3 |         1 | JL Anggrek     |          67 |   54 |
+| 13 | 13131 | Lisya | Perempuan     | Tangerang | 2002-02-09 |        3 |         2 | JL Dahlia      |          32 |   42 |
+| 15 | 15151 | Ziyi  | Perempuan     | Demak     | 1995-10-01 |        3 |         4 | JL Bhayangkara |          60 |   50 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+3 rows in set (0.002 sec)
+
+--> Jawaban No. 26 Menampilkan data pegawai dengan klausa key (nip) 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip = '15151';
++----+-------+------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| 15 | 15151 | Ziyi | Perempuan     | Demak     | 1995-10-01 |        3 |         4 | JL Bhayangkara |          60 |   50 |
++----+-------+------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 27 Menampilkan data pegawai dengan klausa nonkey (gender)
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE gender = 'Perempuan';
+ERROR 1054 (42S22): Unknown column 'gender' in 'where clause'
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin = 'Perempuan';
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+|  3 | 03030 | Emilia            | Perempuan     | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |   52 |
+|  5 | 05050 | Sasya             | Perempuan     | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |   27 |
+|  7 | 07070 | Lily              | Perempuan     | Bandung    | 1980-02-02 |        2 |         3 | JL Anggrek       |          30 |   28 |
+|  9 | 09090 | Mily              | Perempuan     | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |          55 |   25 |
+| 11 | 11111 | Lilis             | Perempuan     | Bandung    | 1985-01-09 |        3 |         1 | JL Anggrek       |          67 |   54 |
+| 13 | 13131 | Lisya             | Perempuan     | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |          32 |   42 |
+| 15 | 15151 | Ziyi              | Perempuan     | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |          60 |   50 |
+| 17 | 17171 | Sena              | Perempuan     | Bandung    | 2010-07-10 |        4 |         3 | JL Tugu          |          64 |   37 |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+9 rows in set (0.000 sec)
+
+--> Jawaban No. 28 Menampilkan data pegawai dengan klausa in (menyebutkan beberapa nip) 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip IN ('01010', '10101', '16161');
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta   | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki     | Demak     | 1990-09-09 |        2 |         4 | JL Bhayangkara   |          44 |   30 |
+| 16 | 16161 | Arsa              | Laki-Laki     | Depok     | 2001-09-10 |        4 |         4 | JL Abadi         |          31 |   33 |
++----+-------+-------------------+---------------+-----------+------------+----------+-----------+------------------+-------------+------+
+3 rows in set (0.000 sec)
+
+--> Jawaban No. 29 Menampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir) 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE tmp_lahir NOT IN ('Depok', 'Bandung', 'Semarang');
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+|  3 | 03030 | Emilia            | Perempuan     | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |   52 |
+|  4 | 04040 | Vero              | Laki-Laki     | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja          |          47 |   32 |
+|  5 | 05050 | Sasya             | Perempuan     | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |   27 |
+|  6 | 06060 | Hans              | Laki-Laki     | Cirebon    | 2001-09-06 |        2 |         4 | JL Rawa          |          44 |   58 |
+|  8 | 08080 | Arsa              | Laki-Laki     | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi     |          67 |   25 |
+|  9 | 09090 | Mily              | Perempuan     | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |          55 |   25 |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki     | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara   |          44 |   30 |
+| 12 | 12121 | Aseprianto        | Laki-Laki     | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna        |          52 |   36 |
+| 13 | 13131 | Lisya             | Perempuan     | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |          32 |   42 |
+| 14 | 14141 | Wiliam Santoso    | Laki-Laki     | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi     |          53 |   39 |
+| 15 | 15151 | Ziyi              | Perempuan     | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |          60 |   50 |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+12 rows in set (0.001 sec)
+
+--> Jawaban No. 30 Menampilkan data pegawai berdasarkan nama secara ascending
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY nama ASC;
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+|  8 | 08080 | Arsa              | Laki-Laki     | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi     |          67 |   25 |
+| 16 | 16161 | Arsa              | Laki-Laki     | Depok      | 2001-09-10 |        4 |         4 | JL Abadi         |          31 |   33 |
+| 12 | 12121 | Aseprianto        | Laki-Laki     | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna        |          52 |   36 |
+|  3 | 03030 | Emilia            | Perempuan     | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |   52 |
+|  6 | 06060 | Hans              | Laki-Laki     | Cirebon    | 2001-09-06 |        2 |         4 | JL Rawa          |          44 |   58 |
+| 11 | 11111 | Lilis             | Perempuan     | Bandung    | 1985-01-09 |        3 |         1 | JL Anggrek       |          67 |   54 |
+|  7 | 07070 | Lily              | Perempuan     | Bandung    | 1980-02-02 |        2 |         3 | JL Anggrek       |          30 |   28 |
+| 13 | 13131 | Lisya             | Perempuan     | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |          32 |   42 |
+| 18 | 18181 | Liyam             | Laki-Laki     | Semarang   | 1975-04-10 |        4 |         2 | JL Nuri          |          40 |   24 |
+|  9 | 09090 | Mily              | Perempuan     | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |          55 |   25 |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki     | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara   |          44 |   30 |
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+|  5 | 05050 | Sasya             | Perempuan     | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |   27 |
+| 17 | 17171 | Sena              | Perempuan     | Bandung    | 2010-07-10 |        4 |         3 | JL Tugu          |          64 |   37 |
+|  4 | 04040 | Vero              | Laki-Laki     | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja          |          47 |   32 |
+| 14 | 14141 | Wiliam Santoso    | Laki-Laki     | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi     |          53 |   39 |
+|  2 | 02020 | Zayn              | Laki-Laki     | Bandung    | 2002-10-10 |        1 |         2 | JL Akasia        |          38 |   42 |
+| 15 | 15151 | Ziyi              | Perempuan     | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |          60 |   50 |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+--> Jawaban No. 31 Menampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan DESC;
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+|  5 | 05050 | Sasya             | Perempuan     | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |   27 |
+|  8 | 08080 | Arsa              | Laki-Laki     | Jakarta    | 1982-06-02 |        2 |         2 | JL Siliwangi     |          67 |   25 |
+| 11 | 11111 | Lilis             | Perempuan     | Bandung    | 1985-01-09 |        3 |         1 | JL Anggrek       |          67 |   54 |
+| 17 | 17171 | Sena              | Perempuan     | Bandung    | 2010-07-10 |        4 |         3 | JL Tugu          |          64 |   37 |
+| 15 | 15151 | Ziyi              | Perempuan     | Demak      | 1995-10-01 |        3 |         4 | JL Bhayangkara   |          60 |   50 |
+|  9 | 09090 | Mily              | Perempuan     | Jakarta    | 2009-09-09 |        2 |         1 | JL Nusantara     |          55 |   25 |
+| 14 | 14141 | Wiliam Santoso    | Laki-Laki     | Sukabumi   | 2004-04-01 |        3 |         3 | JL Siliwangi     |          53 |   39 |
+| 12 | 12121 | Aseprianto        | Laki-Laki     | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna        |          52 |   36 |
+|  4 | 04040 | Vero              | Laki-Laki     | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja          |          47 |   32 |
+|  3 | 03030 | Emilia            | Perempuan     | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |   52 |
+|  6 | 06060 | Hans              | Laki-Laki     | Cirebon    | 2001-09-06 |        2 |         4 | JL Rawa          |          44 |   58 |
+| 10 | 10101 | Muhammad Ali      | Laki-Laki     | Demak      | 1990-09-09 |        2 |         4 | JL Bhayangkara   |          44 |   30 |
+| 18 | 18181 | Liyam             | Laki-Laki     | Semarang   | 1975-04-10 |        4 |         2 | JL Nuri          |          40 |   24 |
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+|  2 | 02020 | Zayn              | Laki-Laki     | Bandung    | 2002-10-10 |        1 |         2 | JL Akasia        |          38 |   42 |
+| 13 | 13131 | Lisya             | Perempuan     | Tangerang  | 2002-02-09 |        3 |         2 | JL Dahlia        |          32 |   42 |
+| 16 | 16161 | Arsa              | Laki-Laki     | Depok      | 2001-09-10 |        4 |         4 | JL Abadi         |          31 |   33 |
+|  7 | 07070 | Lily              | Perempuan     | Bandung    | 1980-02-02 |        2 |         3 | JL Anggrek       |          30 |   28 |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+--> Jawaban No. 32 Menampilkan data 5 pegawai teratas
+MariaDB [dbpegawai]> SELECT * FROM pegawai LIMIT 5;
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+| id | nip   | nama              | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat           | berat_badan | umur |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+|  1 | 01010 | Najwa Aina Nazqia | Perempuan     | Jakarta    | 2005-06-09 |        1 |         1 | JL Tole Iskandar |          38 |   47 |
+|  2 | 02020 | Zayn              | Laki-Laki     | Bandung    | 2002-10-10 |        1 |         2 | JL Akasia        |          38 |   42 |
+|  3 | 03030 | Emilia            | Perempuan     | Yogyakarta | 2000-05-01 |        1 |         3 | JL Aksara        |          46 |   52 |
+|  4 | 04040 | Vero              | Laki-Laki     | Surabaya   | 2010-11-10 |        1 |         4 | JL Raja          |          47 |   32 |
+|  5 | 05050 | Sasya             | Perempuan     | Malang     | 2011-11-11 |        1 |         1 | JL Indah         |          67 |   27 |
++----+-------+-------------------+---------------+------------+------------+----------+-----------+------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+--> Jawaban No. 33 Menampilkan data 5 pegawai terbawah gunakan klausa limit offset 
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY id DESC LIMIT 5;
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| 18 | 18181 | Liyam          | Laki-Laki     | Semarang  | 1975-04-10 |        4 |         2 | JL Nuri        |          40 |   24 |
+| 17 | 17171 | Sena           | Perempuan     | Bandung   | 2010-07-10 |        4 |         3 | JL Tugu        |          64 |   37 |
+| 16 | 16161 | Arsa           | Laki-Laki     | Depok     | 2001-09-10 |        4 |         4 | JL Abadi       |          31 |   33 |
+| 15 | 15151 | Ziyi           | Perempuan     | Demak     | 1995-10-01 |        3 |         4 | JL Bhayangkara |          60 |   50 |
+| 14 | 14141 | Wiliam Santoso | Laki-Laki     | Sukabumi  | 2004-04-01 |        3 |         3 | JL Siliwangi   |          53 |   39 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+5 rows in set (0.001 sec)
+
+--> Jawaban No. 34 Menampilkan jumlah pegawai menggunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS total_pegawai FROM pegawai;
++---------------+
+| total_pegawai |
++---------------+
+|            18 |
++---------------+
+1 row in set (0.002 sec)
+
+--> Jawaban No. 35 Menampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi
+dengan sub query)
+MariaDB [dbpegawai]> SELECT nip,nama,umur FROM pegawai
+    -> WHERE umur = (SELECT MAX(umur) FROM pegawai);
++-------+------+------+
+| nip   | nama | umur |
++-------+------+------+
+| 06060 | Hans |   58 |
++-------+------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 36 Menampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min
+(kombinasi dengan sub query) 
+MariaDB [dbpegawai]> SELECT nip, nama, berat_badan FROM pegawai
+    -> WHERE berat_badan = (SELECT MIN(berat_badan) FROM pegawai);
++-------+------+-------------+
+| nip   | nama | berat_badan |
++-------+------+-------------+
+| 07070 | Lily |          30 |
++-------+------+-------------+
+1 row in set (0.001 sec)
+
+--> Jawaban NO. 37 Menampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg
+MariaDB [dbpegawai]> SELECT AVG(umur) AS rata_umur_pegawai FROM pegawai;
++-------------------+
+| rata_umur_pegawai |
++-------------------+
+|           37.8333 |
++-------------------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 38 Menampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan
+Manajer, gunakan fungsi aggregrat count dan klausa AND
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> WHERE jenis_kelamin = 'Laki-Laki' AND umur > 40 AND idjabatan = 2;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              1 |
++----------------+
+1 row in set (0.002 sec)
+
+--> Jawaban NO. 39 Menampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> WHERE jenis_kelamin = 'Perempuan' AND umur < 40 AND idjabatan = 4;
++----------------+
+| jumlah_pegawai |
++----------------+
+|              0 |
++----------------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 40 Menampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan FROM pegawai
+    -> WHERE jenis_kelamin = 'perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                        9 |
++--------------------------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 41 Menampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa
+WHERE
+MariaDB [dbpegawai]> SELECT SUM(CASE WHEN iddivisi = 1 THEN 1 ELSE 0 END) AS jumlah_pegawai_SDM FROM pegawai;
++--------------------+
+| jumlah_pegawai_SDM |
++--------------------+
+|                  5 |
++--------------------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 42 Menampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count
+dan klausa group by
+MariaDB [dbpegawai]> SELECT iddivisi, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY iddivisi;
++----------+----------------+
+| iddivisi | jumlah_pegawai |
++----------+----------------+
+|        1 |              5 |
+|        2 |              5 |
+|        3 |              5 |
+|        4 |              3 |
++----------+----------------+
+4 rows in set (0.001 sec)
+
+--> Jawaban No. 43 Menampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan
+group by dan having) 
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai FROM pegawai
+    -> GROUP BY jenis_kelamin HAVING COUNT(*) >= 10;
+Empty set (0.001 sec)
+
+--> Jawaban No. 44 Mencari data pegawai yang berawalan kata Muhammad 
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE 'Muhammad%';
++----+-------+--------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| id | nip   | nama         | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat         | berat_badan | umur |
++----+-------+--------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+| 10 | 10101 | Muhammad Ali | Laki-Laki     | Demak     | 1990-09-09 |        2 |         4 | JL Bhayangkara |          44 |   30 |
++----+-------+--------------+---------------+-----------+------------+----------+-----------+----------------+-------------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 45 Mencari data pegawai yang berakhiran kata santoso
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Santoso';
++----+-------+----------------+---------------+-----------+------------+----------+-----------+--------------+-------------+------+
+| id | nip   | nama           | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat       | berat_badan | umur |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+--------------+-------------+------+
+| 14 | 14141 | Wiliam Santoso | Laki-Laki     | Sukabumi  | 2004-04-01 |        3 |         3 | JL Siliwangi |          53 |   39 |
++----+-------+----------------+---------------+-----------+------------+----------+-----------+--------------+-------------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 46 Mencari data pegawai yang mengandung kata Asep
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Asep%';
++----+-------+------------+---------------+------------+------------+----------+-----------+-----------+-------------+------+
+| id | nip   | nama       | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat    | berat_badan | umur |
++----+-------+------------+---------------+------------+------------+----------+-----------+-----------+-------------+------+
+| 12 | 12121 | Aseprianto | Laki-Laki     | Yogyakarta | 2003-01-09 |        3 |         1 | JL Arjuna |          52 |   36 |
++----+-------+------------+---------------+------------+------------+----------+-----------+-----------+-------------+------+
+1 row in set (0.001 sec)
+
+--> Jawaban No. 47 Mencari data pegawai yang huruf kelimanya adalah huruf S
+MariaDB [dbpegawai]> SELECT *FROM pegawai WHERE nama LIKE '____S%';
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| id | nip   | nama  | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat     | berat_badan | umur |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+| 11 | 11111 | Lilis | Perempuan     | Bandung   | 1985-01-09 |        3 |         1 | JL Anggrek |          67 |   54 |
++----+-------+-------+---------------+-----------+------------+----------+-----------+------------+-------------+------+
+1 row in set (0.001 sec)
+
